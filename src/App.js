@@ -1,351 +1,320 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-const PRODUCTS = [
-  {
-    id: "pepper",
-    title: "Pepper",
-    subtitle: "(Whole)",
-    desc: "Pure Idukki whole pepper, sun-dried for a robust and earthy flavour.",
-    img: "https://uploads.onecompiler.io/444asmhmf/444asjcr8/pepper1.jpg",
-  },
-  {
-    id: "cardamom",
-    title: "Cardamom",
-    subtitle: "(Green)",
-    desc: "Premium Kerala green cardamom — aromatic, hand-picked and carefully dried.",
-    img: "https://uploads.onecompiler.io/444asmhmf/444asjcr8/cardamom1.jpg",
-  },
-  {
-    id: "clove",
-    title: "Clove",
-    subtitle: "(Whole)",
-    desc: "Handpicked cloves, oil-rich and perfect for both retail & bulk supply.",
-    img: "https://uploads.onecompiler.io/444asmhmf/444asjcr8/clove.jpg",
-  },
-  {
-    id: "honey",
-    title: "Honey",
-    subtitle: "(Natural)",
-    desc: "Raw, unfiltered honey sourced from local apiaries — full of natural goodness.",
-    img: "https://uploads.onecompiler.io/444asmhmf/444asjcr8/honey.jpg",
-  },
-];
-
 export default function App() {
-  const [index, setIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const intervalRef = useRef(null);
-  const delay = 4500;
+
+  // For card slider
+  const cardsRef = useRef(null);
+  const leftArrowRef = useRef(null);
+  const rightArrowRef = useRef(null);
+
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const cards = [
+    {
+      title: "Card 1",
+      img:"https://uploads.onecompiler.io/444asmhmf/444r4d5qf/cardamom3.jpg",
+      link: 'https://amzn.in/d/5V6T13R' // Buy Now
+    },
+    {
+      title: "Card 2",
+      img:"https://uploads.onecompiler.io/444asmhmf/444qvdnmq/Untitled%20design%20(3).jpg",
+      link: "https://amzn.in/d/aXHzUHD"   // Buy Now
+    },
+    {
+      title: "Card 3",
+      img:  "https://uploads.onecompiler.io/444asmhmf/444r4d5qf/PURE%20HONEY.jpg",
+      link: null                              // Coming Soon
+    },
+    {
+      title: "Card 4",
+      img: "https://uploads.onecompiler.io/444asmhmf/444r4d5qf/PURE%20HONEY%20(1).jpg",
+      link: null                              // Coming Soon
+    }
+  ];
+  
+
+ 
+  
+
+  // Arrow state updater
+  const updateArrowState = () => {
+    const el = cardsRef.current;
+    if (!el) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
+  };
 
   useEffect(() => {
-    startAuto();
-    return stopAuto;
-  }, [index]);
+    updateArrowState();
+    window.addEventListener("resize", updateArrowState);
+    return () => window.removeEventListener("resize", updateArrowState);
+  }, []);
 
-  function startAuto() {
-    stopAuto();
-    intervalRef.current = setInterval(() => {
-      setIndex((i) => (i + 1) % PRODUCTS.length);
-    }, delay);
-  }
-
-  function stopAuto() {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }
-
-  function goTo(i) {
-    setIndex(i);
-    startAuto();
-  }
-
-  const product = PRODUCTS[index];
-
-  // --- Add these lines at the top of App() ---
-const cardsRef = useRef(null);
-const leftArrowRef = useRef(null);
-const rightArrowRef = useRef(null);
-const [canScrollLeft, setCanScrollLeft] = useState(false);
-const [canScrollRight, setCanScrollRight] = useState(false);
-
-function updateArrowState() {
-  const el = cardsRef.current;
-  if (!el) return;
-  setCanScrollLeft(el.scrollLeft > 8);
-  setCanScrollRight(el.scrollWidth - el.clientWidth - el.scrollLeft > 8);
-}
-
-// Set up scroll + resize listeners to keep arrows updated
-useEffect(() => {
-  const el = cardsRef.current;
-  if (!el) return;
-  updateArrowState();
-
-  function handleScroll() { updateArrowState(); }
-  function handleResize() { updateArrowState(); }
-
-  el.addEventListener("scroll", handleScroll, { passive: true });
-  window.addEventListener("resize", handleResize);
-
-  return () => {
-    el.removeEventListener("scroll", handleScroll);
-    window.removeEventListener("resize", handleResize);
+  // Step size for scroll
+  const scrollStep = () => {
+    const el = cardsRef.current;
+    if (!el) return 250;
+    const card = el.querySelector(".product-card");
+    return card ? card.offsetWidth + 24 : 250;
   };
-}, []);
-
 
   return (
     <div className="page">
-      {/* Header */}
+
+      {/* ---------------- HEADER ---------------- */}
       <header className="header">
-        <div className="header-left">
-          <img
-            src="https://uploads.onecompiler.io/444asmhmf/444asjcr8/logo3.jpg"
-            alt="Cardamist"
-            className="logo"
-          />
-        </div>
 
-        <div className="header-right">
-          {/* Desktop icons */}
-          <div className="icons desktop-only">
-            <a
-              href="https://www.instagram.com/cardamist/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/87/87390.png"
-                alt="Instagram"
-                className="social-icon"
-              />
-            </a>
-            <a
-              href="https://wa.me/353894845174"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="https://cdn-icons-png.freepik.com/512/152/152740.png"
-                alt="WhatsApp"
-                className="social-icon"
-              />
-            </a>
-            <a href="tel:+919207076764">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/597/597177.png"
-                alt="Phone"
-                className="social-icon"
-              />
-            </a>
-          </div>
+  {/* LOGO */}
+  <div className="header-left">
+    <img
+      src="https://uploads.onecompiler.io/444asmhmf/444hpejdd/1000028492.png"
+      className="header-logo"
+      alt="Cardamist"
+    />
+  </div>
 
-          {/* mobile menu toggle */}
-          <button
-            className="menu-btn mobile-only"
-            aria-label="Toggle menu"
-            onClick={() => setMenuOpen((s) => !s)}
-          >
-            ☰
-          </button>
-        </div>
-
-        {/* Mobile dropdown icons only */}
-        {menuOpen && (
-          <div className="mobile-menu" role="dialog">
-            <a
-              href="https://www.instagram.com/cardamist/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/87/87390.png"
-                alt="Instagram"
-                className="mobile-social-icon"
-              />
-            </a>
-            <a
-              href="https://wa.me/353894845174"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="https://cdn-icons-png.freepik.com/512/152/152740.png"
-                alt="WhatsApp"
-                className="mobile-social-icon"
-              />
-            </a>
-            <a href="tel:+919207076764">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/597/597177.png"
-                alt="Phone"
-                className="mobile-social-icon"
-              />
-            </a>
-          </div>
-        )}
-      </header>
-
-      {/* Hero Section */}
-      <main
-        className="hero product-section"
-        onMouseEnter={stopAuto}
-        onMouseLeave={startAuto}
-      >
-        <div className="half image-side">
-          <img src={product.img} alt={product.title} className="product-img" />
-        </div>
-
-        <div className="half text-side">
-          <p className="count">
-            {String(index + 1).padStart(2, "0")} / {PRODUCTS.length}
-          </p>
-          <h1 className="title">{product.title}</h1>
-          <h2 className="subtitle">{product.subtitle}</h2>
-          <p className="desc">{product.desc}</p>
-
-          <div className="nav-dots">
-            {PRODUCTS.map((_, i) => (
-              <button
-                key={i}
-                className={`dot ${i === index ? "active" : ""}`}
-                onClick={() => goTo(i)}
-              />
-            ))}
-          </div>
-        </div>
-      </main>
-
-{/* ---------- Products section (horizontal scroll) with arrows ---------- */}
-<section className="products-section" aria-label="Our Products">
-  <h2 className="section-title">Buy Now</h2>
-
-  <div className="cards-wrap">
-    {/* Left arrow */}
-    <button
-      className="cards-arrow left"
-      onClick={() => {
-        const el = cardsRef.current;
-        if (!el) return;
-        const card = el.querySelector('.product-card');
-        const step = card ? card.offsetWidth + 24 : Math.round(el.offsetWidth * 0.32);
-        el.scrollBy({ left: -step, behavior: 'smooth' });
-      }}
-      aria-label="Scroll left"
-      ref={leftArrowRef}
-      disabled={!canScrollLeft}
+  {/* DESKTOP RIGHT ICONS */}
+  <div className="header-right">
+    <a
+      href="https://www.instagram.com/cardamist/"
+      target="_blank"
+      rel="noreferrer"
+      className="icon-row"
     >
-      ‹
-    </button>
+      <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" />
+      <span>Instagram</span>
+    </a>
 
-    {/* Scroll container */}
-    <div
-      className="cards-scroll"
-      ref={cardsRef}
-      role="list"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          const el = cardsRef.current;
-          const card = el?.querySelector('.product-card');
-          const step = card ? card.offsetWidth + 24 : Math.round(el.offsetWidth * 0.32);
-          el.scrollBy({ left: -step, behavior: 'smooth' });
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          const el = cardsRef.current;
-          const card = el?.querySelector('.product-card');
-          const step = card ? card.offsetWidth + 24 : Math.round(el.offsetWidth * 0.32);
-          el.scrollBy({ left: step, behavior: 'smooth' });
-        }
-      }}
-      onScroll={() => updateArrowState()}
+    <a
+      href="https://wa.me/353894845174"
+      target="_blank"
+      rel="noreferrer"
+      className="icon-row"
     >
-      {/* Cardamom */}
-      <article className="product-card wide compact" role="listitem">
-        <img
-          src="https://uploads.onecompiler.io/444asmhmf/444asjcr8/cardamom1.jpg"
-          alt="Cardamom"
-          className="product-full-img"
-          loading="lazy"
-        />
-        <a
-          className="btn buy-now-transparent"
-          href="https://amzn.in/d/2boaY6F"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Buy Cardamom on Amazon"
-        >
-          Buy Now
-        </a>
-      </article>
+      <img src="https://cdn-icons-png.freepik.com/512/152/152740.png" alt="WhatsApp" />
+      <span>WhatsApp</span>
+    </a>
 
-      {/* Pepper */}
-      <article className="product-card wide compact" role="listitem">
-        <img
-          src="https://uploads.onecompiler.io/444asmhmf/444asjcr8/pepper1.jpg"
-          alt="Pepper"
-          className="product-full-img"
-          loading="lazy"
-        />
-        <a
-          className="btn buy-now-transparent"
-          href="https://amzn.in/d/bxeZgIg"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Buy Pepper on Amazon"
-        >
-          Buy Now
-        </a>
-      </article>
+    <a href="tel:+919207076764" className="icon-row">
+      <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call" />
+      <span>Call</span>
+    </a>
+  </div>
 
-      {/* Honey */}
-      <article className="product-card wide compact" role="listitem">
-        <img
-          src="https://uploads.onecompiler.io/444asmhmf/444asjcr8/honey.jpg"
-          alt="Honey"
-          className="product-full-img"
-          loading="lazy"
-        />
-        <span className="coming-soon" aria-hidden="true">Coming Soon</span>
-      </article>
+  {/* HAMBURGER MENU BUTTON (Aesthetic + Animated) */}
+  <button
+    className={`menu-btn ${menuOpen ? "open" : ""}`}
+    onClick={() => setMenuOpen(!menuOpen)}
+    aria-label={menuOpen ? "Close menu" : "Open menu"}
+    aria-expanded={menuOpen}
+    aria-controls="mobile-menu"
+  >
+    <span className="hamburger-line line1"></span>
+    <span className="hamburger-line line2"></span>
+    <span className="hamburger-line line3"></span>
+  </button>
 
-      {/* Clove */}
-      <article className="product-card wide compact" role="listitem">
-        <img
-          src="https://uploads.onecompiler.io/444asmhmf/444asjcr8/clove.jpg"
-          alt="Clove"
-          className="product-full-img"
-          loading="lazy"
-        />
-        <span className="coming-soon" aria-hidden="true">Coming Soon</span>
-      </article>
+  {/* MOBILE MENU */}
+  <div
+    className="mobile-menu"
+    id="mobile-menu"
+    style={{ display: menuOpen ? "flex" : "none" }}
+    role="dialog"
+  >
+    <a
+      href="https://www.instagram.com/cardamist/"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/87/87390.png"
+        alt="Instagram"
+        className="mobile-social-icon"
+      />
+    </a>
+
+    <a
+      href="https://wa.me/353894845174"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <img
+        src="https://cdn-icons-png.freepik.com/512/152/152740.png"
+        alt="WhatsApp"
+        className="mobile-social-icon"
+      />
+    </a>
+
+    <a href="tel:+919207076764">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/597/597177.png"
+        alt="Phone"
+        className="mobile-social-icon"
+      />
+    </a>
+  </div>
+
+</header>
+
+
+      {/* ---------------- HERO SECTION ---------------- */}
+      <section className="hero-section">
+        <div className="overlay">
+          <div className="hero-content">
+            <h1>Pure Idukki Spices-From Our Soil</h1>
+            <h1>to Your Spice Rack.</h1>
+            <p>
+              Estate-grown, hand-harvested spices-pure, fresh, and free from additives
+            </p>
+            <a href="#products" className="cta-btn">
+            SHOP NOW
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- About Us ---------- */}
+{/* ---------- About Us + Our Story (responsive two-column) ---------- */}
+<section className="about-section" aria-labelledby="about-title">
+  {/* NOTE: both classes 'about-inner' AND 'about-wrapper' AND 'single' are required */}
+  <div className="about-inner about-wrapper single">
+    {/* LEFT: About Us */}
+    <div className="about-content">
+      <h2 id="about-title" className="about-title">About Us</h2>
+      <p className="about-sub">Pure. Honest. Rooted in Idukki.</p>
+
+      <div className="about-text">
+        <p>
+          At Cardamist, we bring the true essence of Kerala’s spice heritage straight from our estate in Idukki to kitchens across India. What we grow is what you get — pure spices nurtured in rich forest soil, handpicked with care, and packed without additives, preservatives, or shortcuts.
+        </p>
+
+        <p>
+          For generations, our family has cultivated black pepper, cardamom, cloves, and honey in the mist-covered hills of Idukki. Every batch we harvest carries the aroma of shade-grown farming, the depth of essential oils, and the authenticity that only nature can create. No blending. No artificial color. No industrial processing.
+        </p>
+
+        <p>
+          Whether you're a home cook, a café, or a bulk buyer, Cardamist stands for integrity, purity, and the timeless flavours that Kerala is known for.
+        </p>
+      </div>
+
+      <div className="about-actions">
+        <a href="tel:+919207076764" className="contact-btn" aria-label="Send us an email">Contact Us</a>
+      </div>
     </div>
 
-    {/* Right arrow */}
-    <button
-      className="cards-arrow right"
-      onClick={() => {
-        const el = cardsRef.current;
-        if (!el) return;
-        const card = el.querySelector('.product-card');
-        const step = card ? card.offsetWidth + 24 : Math.round(el.offsetWidth * 0.32);
-        el.scrollBy({ left: step, behavior: 'smooth' });
-      }}
-      aria-label="Scroll right"
-      ref={rightArrowRef}
-      disabled={!canScrollRight}
-    >
-      ›
-    </button>
+    {/* RIGHT: Our Story */}
+    <aside className="story-content" aria-labelledby="story-title">
+      <h2 id="story-title" className="story-title">Our Story</h2>
+      <p className="story-sub">From hilltop farms to your kitchen table.</p>
+
+      <div className="story-text">
+        <p>
+        For three generations, our family has been cultivating pepper and cardamom on our own land in the misty hills of Idukki. Over the years, we’ve lived through the challenges that every true farmer knows—unpredictable weather, natural calamities, and the constant struggle of watching middlemen undervalue our hard work. While researching the market, we realised something that truly bothered us: the finest spices grown here were being exported abroad, while people in Kerala and across India were left with lower-quality alternatives brought in from outside. 
+        </p>
+
+        <p>
+        That’s when we, two cousins, decided it was time to change the story. We created Cardamist with one simple promise—bringing fresh, natural, A-grade spices directly from our estate to your home, just the way they’re meant to be.
+        </p>
+      </div>
+
+      <div className="story-actions">
+        <a href="#products" className="btn story-cta" aria-label="Shop our range">Shop Our Range</a>
+        <a href="mailto:cardamist@gmail.com" className="btn story-secondary" aria-label="Email us to learn more">Email Us</a>
+      </div>
+    </aside>
   </div>
 </section>
 
-{/* ---------- Why Choose Us ---------- */}
-<section className="why-section" aria-labelledby="why-title">
+
+{/* ---------------- PRODUCT CARD SECTION ---------------- */}
+<section id="products" className="products-section full-page" aria-label="Our Products">
+        <h2 className="section-title">Shop Fresh Spices</h2>
+
+        <div className="cards-wrap">
+
+          {/* LEFT ARROW */}
+          <button
+            className="cards-arrow left"
+            ref={leftArrowRef}
+            disabled={!canScrollLeft}
+            onClick={() => {
+              const el = cardsRef.current;
+              if (!el) return;
+              el.scrollBy({ left: -scrollStep(), behavior: "smooth" });
+            }}
+          >
+            ‹
+          </button>
+
+          {/* SCROLL AREA */}
+          <div
+            className="cards-scroll"
+            ref={cardsRef}
+            role="list"
+            tabIndex={0}
+            onScroll={updateArrowState}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                cardsRef.current?.scrollBy({
+                  left: -scrollStep(),
+                  behavior: "smooth",
+                });
+              } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                cardsRef.current?.scrollBy({
+                  left: scrollStep(),
+                  behavior: "smooth",
+                });
+              }
+            }}
+          >
+
+            {/* 4 Cards */}
+            {cards.map((card, index) => (
+      <article key={index} className="product-card wide compact">
+
+      <img src={card.img} alt={card.title} className="product-full-img"/>
+
+    {card.link ? (
+      <a className="btn buy-now-transparent" href={card.link} target="_blank">
+        Buy Now
+      </a>
+    ) : (
+      <div className="coming-soon">Coming Soon</div>
+    )}
+
+  </article>
+))}
+
+
+          </div>
+
+          {/* RIGHT ARROW */}
+          <button
+            className="cards-arrow right"
+            ref={rightArrowRef}
+            disabled={!canScrollRight}
+            onClick={() => {
+              const el = cardsRef.current;
+              if (!el) return;
+              el.scrollBy({ left: scrollStep(), behavior: "smooth" });
+            }}
+          >
+            ›
+          </button>
+
+        </div>
+      </section>
+
+      {/* ---------- Why Choose Us ---------- */}
+<section className="why-section full-page" aria-labelledby="why-title">
   <div className="why-inner">
     <h2 id="why-title" className="why-main-title">Why Choose Us?</h2>
     <p className="why-subtitle">Quality, purity and flavour — from Kerala's spice gardens to your kitchen.</p>
@@ -387,47 +356,10 @@ useEffect(() => {
   </div>
 </section>
 
-{/* ---------- About Us ---------- */}
-<section className="about-section" aria-labelledby="about-title">
-  <div className="about-inner single">
-    <h2 id="about-title" className="about-title">About Us</h2>
-    <p className="about-sub">Pure. Authentic. Naturally Kerala.</p>
 
-    <div className="about-text">
-      <p>
-        We bring the true essence of Kerala’s spice heritage to kitchens and businesses around the world.
-        As a trusted name in both retail and wholesale spice trade, we specialize in delivering premium-quality,
-        naturally sourced spices handpicked and unblended for unmatched purity and aroma.
-      </p>
+      
 
-      <p>
-        From the fertile hills and spice gardens of Kerala, our range — including Cardamom, Black Pepper,
-        Cloves, and Honey — embodies the warmth, depth, and authenticity of nature itself. Each spice is
-        carefully curated to preserve its essential oils, bold flavor, and natural character, free from artificial
-        colors or additives.
-      </p>
-
-      <p>
-        Whether you’re a home cook, gourmet brand, or bulk buyer, Cardamist stands for quality, purity, and
-        the timeless flavor of India’s finest spices.
-      </p>
-    </div>
-
-    <div className="about-actions">
-      <a
-        href="mailto:cardamist@gmail.com"
-        className="contact-btn"
-        aria-label="Send us an email"
-      >
-        Contact Us
-      </a>
-    </div>
-  </div>
-</section>
-
-
-
-{/* ---------- Footer ---------- */}
+     {/* ---------- Footer ---------- */}
 <footer className="site-footer">
   <div className="footer-inner">
     <p className="footer-address">
@@ -471,7 +403,6 @@ useEffect(() => {
   </div>
 </footer>
 
-
-</div>
+    </div>
   );
 }
