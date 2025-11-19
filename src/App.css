@@ -1,8 +1,8 @@
 /* --- NEXA HEAVY (800) ONLY --- */
 @font-face {
   font-family: "NexaHeavy";
-  src: url("src/fonts/Nexa-Heavy.woff2") format("woff2"),
-       url("src/fonts/Nexa-Heavy.woff") format("woff");
+  src: url("./fonts/Nexa-Heavy.woff2") format("woff2"),
+       url("./fonts/Nexa-Heavy.woff") format("woff");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
