@@ -1,467 +1,361 @@
-:root {
-  --bg: #f1f1e8;
-  --accent: #215a3f;
-  --muted: #7a7a74;
+/* --- NEXA HEAVY (800) ONLY --- */
+@font-face {
+  font-family: "NexaHeavy";
+  src: url("src/fonts/Nexa-Heavy.woff2") format("woff2"),
+       url("src/fonts/Nexa-Heavy.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
 }
 
-body {
+
+
+:root {
+  --accent: #215a3f;
+  --bg: #f1f1e8;
+  --white: #ffffff;
+}
+/* prevent horizontal overflow and ensure consistent box sizing */
+html, body {
   margin: 0;
-  font-family: "Poppins", "Segoe UI", sans-serif;
+  padding: 0;
+  overflow-x: hidden; /* prevents any right-side extra area from showing */
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+
+/* RESET */
+body, html {
+  margin: 0;
+  padding: 0;
+  
   background: var(--bg);
   color: #222;
 }
 
-/* Header */
+/* ------------------------------ */
+/* HEADER (STATIC & TRANSPARENT)  */
+/* ------------------------------ */
+
+/* FIXED HEADER — NO MOVEMENT */
+/* HEADER — IN NORMAL PAGE FLOW, TRANSPARENT */
 .header {
+  position: absolute;   /* <— IMPORTANT */
+  width: 100%;
+  height: 80px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 14px 4%;
-  background: var(--bg);
-  position: relative;
-  z-index: 40;
+  justify-content: space-between;
+
+  padding: 0 20px;
+  z-index: 10;
+
+  background: transparent; 
+  backdrop-filter: none;
 }
+
+
+
+/* ------------------------------ */
+/* LOGO                           */
+/* ------------------------------ */
 
 .header-left {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
 }
 
-.logo {
-  height: 58px;
+.header-logo {
+  height: 150px;       /* big logo overlapping hero */
+  width: auto;
   object-fit: contain;
+  transform: translateY(12px) translateX(-58px);
+  transition: height 0.3s ease;
 }
 
-/* Right end icons */
+/* ------------------------------ */
+/* DESKTOP CONTACT ICONS          */
+/* ------------------------------ */
+
 .header-right {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-  flex: 1;
+  gap: 22px;
+  transform: translateX(-2px);
 }
 
-/* Desktop social icons */
-.icons {
+.icon-row {
   display: flex;
-  gap: 14px;
   align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0.9;
+  transition: 0.25s;
 }
 
-.social-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(17%) sepia(13%) saturate(1246%)
-    hue-rotate(89deg) brightness(90%) contrast(87%);
-  transition: transform 0.2s ease;
+.icon-row:hover {
+  transform: translateY(-2px);
+  opacity: 1;
 }
 
-.social-icon:hover {
-  transform: scale(1.15);
+.icon-row img {
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) invert(1); /* make icons white */
 }
-
-/* Clean hamburger (no border) */
-.menu-btn {
-  background: transparent;
-  border: none;
-  font-size: 28px;
-  color: var(--accent);
-  cursor: pointer;
+/* Hide names on desktop */
+.icon-row span {
   display: none;
-  transition: transform 0.15s ease;
 }
 
-.menu-btn:hover {
-  transform: scale(1.1);
-}
 
-/* Mobile menu */
-.mobile-menu {
+/* ------------------------------ */
+/* MOBILE HAMBURGER               */
+/* ------------------------------ */
+
+/* ----------------------------------------- */
+/*   AESTHETIC HAMBURGER BUTTON + MOBILE MENU */
+/* ----------------------------------------- */
+
+.menu-btn {
   position: absolute;
-  right: 4%;
-  top: 70px;
-  background: #fff;
-  padding: 10px 14px;
-  border-radius: 8px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  right: 20px;
+  top: 18px;
+  width: 54px;
+  height: 54px;
+
   display: flex;
-  gap: 12px;
   align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(6px);
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: 0.25s ease;
+  z-index: 10002;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover effect */
+.menu-btn:hover {
+  transform: scale(1.04);
+}
+
+/* HAMBURGER LINES */
+.hamburger-line {
+  position: absolute;
+  left: 50%;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: 0.35s cubic-bezier(.25, .8, .25, 1);
+}
+
+.line1 { top: 18px; }
+.line2 { top: 26px; width: 16px; }
+.line3 { top: 34px; }
+
+/* Animate lines → X */
+.menu-btn.open .line1 {
+  transform: translateX(-50%) translateY(8px) rotate(45deg);
+}
+
+.menu-btn.open .line3 {
+  transform: translateX(-50%) translateY(-8px) rotate(-45deg);
+}
+
+.menu-btn.open .line2 {
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.5);
+}
+
+/* BUTTON ACTIVE STYLE WHEN OPEN */
+.menu-btn.open {
+  background: rgba(33, 90, 63, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ----------------------------------------- */
+/*                MOBILE MENU                */
+/* ----------------------------------------- */
+
+.mobile-menu {
+  display: none; /* Hidden by default */
+  position: absolute;
+  top: 75px;
+  right: 20px;
+
+  background: rgba(0, 0, 0, 0.78);
+  padding: 14px 16px;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+
+  flex-direction: column;
+  gap: 16px;
+
+  z-index: 10001;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
 }
 
 .mobile-social-icon {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
+  display: block;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(17%) sepia(13%) saturate(1246%)
-    hue-rotate(89deg) brightness(90%) contrast(87%);
+  filter: brightness(1000%) invert(100%);
+  transition: 0.2s;
 }
 
-/* Desktop and mobile visibility */
-.desktop-only {
-  display: flex;
-}
-.mobile-only {
-  display: none;
+.mobile-social-icon:hover {
+  transform: scale(1.12);
 }
 
-@media (max-width: 768px) {
-  .desktop-only {
-    display: none;
+/* ----------------------------------------- */
+/* RESPONSIVE */
+/* ----------------------------------------- */
+
+@media (max-width: 900px) {
+  .menu-btn {
+    display: flex;
   }
-  .mobile-only {
-    display: inline-block;
-  }
-}
-
-/* Hero Section */
-.hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 28px 6%;
-  background: var(--bg);
-}
-
-.half {
-  width: 50%;
-}
-
-/* Product image */
-.product-img {
-  width: 720px;
-  max-width: 100%;
-  height: 720px;
-  max-height: 80vh;
-  object-fit: contain;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-}
-
-/* Text side */
-.text-side {
-  color: var(--accent);
-}
-
-.count {
-  color: var(--muted);
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.title {
-  font-size: 48px;
-  margin: 0;
-  line-height: 1.1;
-}
-
-.subtitle {
-  font-size: 20px;
-  margin-top: 6px;
-  font-weight: 600;
-}
-
-.desc {
-  color: #333;
-  font-size: 16px;
-  line-height: 1.6;
-  max-width: 560px;
-  margin: 14px 0;
-}
-
-/* Nav dots */
-.nav-dots {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ddd;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.dot.active {
-  background: var(--accent);
-  transform: scale(1.2);
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .hero {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 18px;
-  }
-
-  .half {
-    width: 100%;
-  }
-
-  .product-img {
-    width: 90%;
-    max-width: 420px;
-    height: auto;
-  }
-
-  .title {
-    font-size: 30px;
-  }
-
-  .subtitle {
-    font-size: 17px;
-  }
-
-  .desc {
-    font-size: 15px;
+  .header-right {
+    display: none !important;
   }
 }
 
-/* Section styling */
-/* ----------------------------
-  Product Section — Full CSS
-  ---------------------------- */
-
-/* variables (remove if already defined globally) */
-:root {
-  --bg: #f1f1e8;
-  --accent: #215a3f;
+@media (min-width: 901px) {
+  .menu-btn,
+  .mobile-menu {
+    display: none !important; /* hide hamburger on desktop */
+  }
 }
 
-/* Section wrapper */
-.products-section {
-  padding: 48px 4%;
-  background: var(--bg);
+
+/* ------------------------------ */
+/* HERO SECTION                   */
+/* ------------------------------ */
+
+.hero-section {
+  height: 100vh;
+  width: 100%;
+  background-image: url("https://uploads.onecompiler.io/444asmhmf/444hhm7dj/1000028485.jpg"); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
-  padding-bottom: 80px; /* space for arrows below/around */
-}
 
-/* Title */
-.section-title {
-  text-align: center;
-  font-size: 28px;
-  color: var(--accent);
-  margin: 0 0 18px;
-  font-weight: 700;
-}
-
-/* Cards wrapper (arrows + scroll area) */
-.cards-wrap {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ----------------------------
-   Scroll container
-   - hide native scrollbar but keep scrollable
-   - snap to cards
-   ---------------------------- */
-.cards-scroll {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  padding: 12px 64px; /* side padding makes room for arrows */
-  align-items: center;
-  box-sizing: content-box;
-}
-
-/* hide scrollbar in WebKit */
-.cards-scroll::-webkit-scrollbar { display: none; }
-/* hide scrollbar in Firefox */
-.cards-scroll { scrollbar-width: none; }
-
-/* ----------------------------
-   Product Card
-   - approx 3 cards visible on wide screens
-   - compact landscape
-   ---------------------------- */
-.product-card.wide.compact {
-  flex: 0 0 32%;
-  min-width: 420px;     /* target width on desktop */
-  height: 300px;
-  border-radius: 14px;
-  overflow: hidden;
-  position: relative;
-  background: #000;     /* fallback while image loads */
-  box-shadow: 0 10px 32px rgba(33, 90, 63, 0.12);
-  transition: transform .22s ease, box-shadow .22s ease;
-  scroll-snap-align: center;
-}
-
-.product-card.wide.compact:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 42px rgba(33, 90, 63, 0.16);
-}
-
-/* image fills card */
-.product-full-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  display: block;
-}
-
-/* subtle overlay to help white text stand out (optional) */
-.product-card.wide.compact::after {
-  content: "";
+/* Dark overlay */
+.overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.04) 35%, rgba(0,0,0,0) 65%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ----------------------------
-   Buy Now (transparent overlay)
-   ---------------------------- */
-.btn.buy-now-transparent {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  border: 2px solid rgba(255,255,255,0.95);
-  padding: 8px 24px;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  backdrop-filter: blur(2px);
-  transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
-  z-index: 3;
-}
-
-.btn.buy-now-transparent:hover,
-.btn.buy-now-transparent:focus {
-  background: rgba(255,255,255,0.22);
-  transform: translateX(-50%) translateY(-2px);
-  box-shadow: 0 8px 22px rgba(0,0,0,0.28);
-  outline: none;
-}
-
-/* Coming Soon label */
-.coming-soon {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #fff;
-  background: rgba(0,0,0,0.45);
-  padding: 8px 22px;
-  border-radius: 999px;
-  font-weight: 700;
-  border: 2px solid rgba(255,255,255,0.85);
-  letter-spacing: 0.4px;
-  z-index: 3;
-}
-
-/* ----------------------------
-   Left / Right arrows (sides, vertically centered)
-   ---------------------------- */
-.cards-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.98);
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  display: inline-flex;
+  background: rgba(0,0,0,0.4);
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  color: var(--accent);
-  cursor: pointer;
-  z-index: 20;
-  transition: transform .12s ease, opacity .12s ease;
 }
 
-/* arrows at sides */
-.cards-arrow.left { left: 8px; }
-.cards-arrow.right { right: 8px; }
-
-.cards-arrow:hover { transform: translateY(-50%) scale(1.06); }
-
-.cards-arrow[disabled] {
-  opacity: 0.45;
-  cursor: default;
-  transform: translateY(-50%) scale(0.98);
+/* HERO TEXT */
+.hero-content {
+  text-align: center;
+  color: #f1f1e8;
+  padding: 0 20px;
+  transform: translateY(-8vh); /* move hero text up */
 }
 
-/* hide arrows on touch devices (swipe) */
-@media (max-width: 900px) {
-  .cards-arrow { display: none; }
-  .cards-scroll { padding: 12px 20px; } /* smaller padding on mobile */
+.hero-content h1 {
+  font-size: 54px;
+  font-weight: 800;
+  margin-bottom: -32px;
+  margin-top: 38px;
 }
 
-/* adjust side padding so arrows don't overlap cards visually */
-@media (max-width: 1200px) {
-  .cards-scroll { padding: 12px 44px; }
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  margin-top: 48px;
+  
+  font-weight: 200;
 }
 
-/* ----------------------------
-   Responsive: how many visible cards
-   ---------------------------- */
-/* medium: ~2 cards */
-@media (max-width: 1100px) {
-  .product-card.wide.compact {
-    flex: 0 0 45%;
-    min-width: 360px;
-    height: 280px;
-  }
+/* CTA Button */
+.cta-btn {
+  display: inline-block;
+  background: #215a3f;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-/* small: 1 card per view */
+.cta-btn:hover {
+  background: #fff;
+  color: #215a3f;
+}
+
+/* ------------------------------- */
+/* MOBILE HERO IMAGE               */
+/* ------------------------------- */
+
 @media (max-width: 768px) {
-  .cards-scroll {
-    gap: 16px;
-    padding: 10px 4%;
+  .hero-section {
+    background-image: url("https://uploads.onecompiler.io/444asmhmf/444hpnzt9/1000028494.jpg");
+    background-position: center top;
   }
-  .product-card.wide.compact {
-    flex: 0 0 92%;
-    min-width: 88%;
-    height: 220px;
-    border-radius: 12px;
+
+  .hero-content {
+    transform: translateY(-8vh);
   }
-  .btn.buy-now-transparent,
-  .coming-soon {
-    bottom: 12px;
-    padding: 7px 20px;
+
+  .hero-content h1 {
+    font-size: 28px;
+    font-weight: 800;
+    
+    margin-bottom: -28px;
+  }
+
+  .hero-content p {
     font-size: 15px;
+    font-weight: 200;
+    margin-top: 58px;
+    margin-bottom: 12px;
+
   }
 }
-
-/* ----------------------------
-   Small visual polish
-   ---------------------------- */
-.product-card.wide.compact:focus-within { outline: none; }
 
 /* ---------- Why Choose Us (interactive overlay version) ---------- */
+
+
+
+
+
 .why-section {
+  height: 80vh;
   padding: 56px 6%;
-  background: var(--bg);
+  background-image: url("https://uploads.onecompiler.io/444asmhmf/444r4d5qf/website%20page.jpg");
+  background-repeat: no-repeat;
+  background-position: center top;   /* adjust to shift image up/down */
+  background-size: 100% auto; 
 }
 
 .why-inner {
@@ -471,7 +365,7 @@ body {
 }
 
 .why-main-title {
-  font-size: 30px;
+  font-size: 48px;
   color: var(--accent);
   margin-bottom: 10px;
   font-weight: 800;
@@ -480,7 +374,8 @@ body {
 .why-subtitle {
   color: #5f5f57;
   margin: 0 0 28px;
-  font-size: 15px;
+  font-size: 25px;
+  margin-bottom: 8%;
 }
 
 /* Grid layout */
@@ -584,6 +479,22 @@ body {
 }
 
 /* Responsive behavior */
+
+@media (max-width: 700px) {
+  .why-section {
+    background-image: url('https://uploads.onecompiler.io/444asmhmf/444wjafn2/website%20page%20CREAM%20MOBILE.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 120vh;
+  }
+  .why-main-title {
+    font-size: 28px;
+  }
+  .why-subtitle {
+    font-size: 18px;
+  }
+}
+
 @media (max-width: 1000px) {
   .why-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -600,11 +511,17 @@ body {
 }
 
 /* ---------- About Us (single column version) ---------- */
+
 .about-section {
   padding: 64px 8%;
-  background: var(--bg);
+  background-image: url("https://uploads.onecompiler.io/444asmhmf/444r4d5qf/website%20page.jpg");
+  background-repeat: no-repeat;
+  background-position: center top;   /* adjust to shift image up/down */
+  background-size: 100% auto; 
   color: #222;
 }
+
+
 
 .about-inner.single {
   max-width: 900px;
@@ -612,17 +529,25 @@ body {
   text-align: center;
 }
 
+@media (min-width: 768px) {
+  .about-inner.single {
+    margin-left: -15%;   /* adjust left shift here */
+    padding-left: 6%;     /* optional fine-tuning */
+  }
+}
+
 .about-title {
-  font-size: 30px;
+  font-size: 48px;
   color: var(--accent);
   font-weight: 800;
   margin-bottom: 10px;
+  margin-top: 7%;
 }
 
 .about-sub {
   color: #5b5b55;
-  margin-bottom: 24px;
-  font-size: 15px;
+  margin-bottom: 29px;
+  font-size: 25px;
   font-weight: 600;
 }
 
@@ -630,7 +555,7 @@ body {
   color: #333;
   line-height: 1.7;
   margin: 0 auto 16px auto;
-  font-size: 15.5px;
+  font-size: 22px;
   max-width: 720px;
 }
 
@@ -653,14 +578,29 @@ body {
 @media (max-width: 700px) {
   .about-section {
     padding: 48px 6%;
+    background-image: url('https://uploads.onecompiler.io/444asmhmf/444wjafn2/website%20page%20CREAM%20MOBILE.jpg');
+   /* IMPORTANT: fit width exactly and keep aspect ratio — prevents "zoom" */
+   background-size: 100% auto !important;   /* scale to container width, don't stretch height */
+   background-position: center top !important; /* keep focus near top */
+   background-repeat: repeat !important;
+   background-attachment: scroll !important; /* avoid 'fixed' on mobile which causes flicker/zoom */
+   -webkit-background-size: 100% auto !important; /* safari pref */
+  height: auto !important;
+  min-height: auto !important;
+  overflow: visible;
+  
   }
 
   .about-title {
-    font-size: 26px;
+    font-size: 28px;
   }
 
+  .about-sub {
+    font-size: 20px;
+  }
+  
   .about-text p {
-    font-size: 14.5px;
+    font-size: 16px;
   }
 }
 /* ---------- About Us: Contact Button ---------- */
@@ -697,17 +637,521 @@ body {
   }
 }
 
+/* ====== Config variables: tweak these for layout adjustments ====== */
+:root{
+  --accent: #235a3f;         /* keep your project's accent variable */
+  --max-inner-width: 1200px; /* outer content width on desktop */
+  --gap: 40px;               /* space between columns on desktop */
+  --about-shift: -4%;        /* negative moves About left; change to -10% etc */
+  --story-shift: 8%;         /* positive moves Story right; change to 12% etc */
+  --breakpoint-md: 768px;
+}
 
+/* ------------------ Shared base styles ------------------ */
+.about-section {
+  padding: 64px 8%;
+  background-image: url("https://uploads.onecompiler.io/444asmhmf/444r4d5qf/website%20page.jpg");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% auto;
+  color: #222;
+}
+
+/* inner container: mobile-first stacked */
+.about-inner.single.about-wrapper {
+  display: block;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center; /* default mobile center text */
+  box-sizing: border-box;
+}
+
+/* Content blocks (shared mobile rules) */
+.about-content,
+.story-content {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 1.25rem 0; /* spacing between stacked blocks */
+  text-align: center;    /* keep text centered inside each block */
+}
+
+.story-content {
+  margin-top: 25%;
+}
+
+/* Titles / subtitles / paragraphs (shared look & feel) */
+.about-title,
+.story-title {
+  font-size: 48px;
+  color: var(--accent);
+  font-weight: 800;
+  margin-bottom: 10px;
+  margin-top: 7%;
+}
+
+.about-sub,
+.story-sub {
+  color: #5b5b55;
+  margin-bottom: 20px;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+/* Paragraphs share styles and fade animation */
+.about-text p,
+.story-text p {
+  color: #333;
+  line-height: 1.7;
+  margin: 0 auto 16px auto;
+  font-size: 20px;
+  max-width: 720px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.6s ease forwards;
+}
+
+/* staggered animation delays (keeps order independent of extra elements) */
+.about-text p:nth-of-type(1), .story-text p:nth-of-type(1) { animation-delay: 0.10s; }
+.about-text p:nth-of-type(2), .story-text p:nth-of-type(2) { animation-delay: 0.30s; }
+.about-text p:nth-of-type(3), .story-text p:nth-of-type(3) { animation-delay: 0.50s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Buttons: reuse styles similar to contact-btn / story CTAs */
+.btn,
+.contact-btn,
+.story-cta,
+.story-secondary {
+  display: inline-block;
+  padding: 10px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* specific variants */
+.contact-btn,
+.story-secondary {
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.story-cta {
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  
+}
+
+/* hover */
+.contact-btn:hover,
+.story-cta:hover,
+.story-secondary:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(33, 90, 63, 0.15);
+}
+
+/* story-actions default: stacks horizontally on desktop; center on mobile */
+.story-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ------------------ Responsive: Desktop two columns ------------------ */
+@media (min-width: var(--breakpoint-md)) {
+
+  /* widen inner container for two columns */
+  .about-inner.single.about-wrapper {
+    display: flex;
+    gap: var(--gap);
+    align-items: flex-start;
+    max-width: var(--max-inner-width);
+    text-align: center; /* keep centered text inside columns */
+    margin: 0 auto;
+  }
+
+  /* left column: About Us */
+  .about-content {
+    flex: 1 1 55%;
+    max-width: 640px;
+    margin: 0;                 /* remove mobile bottom margin */
+    margin-left: var(--about-shift); /* only content shift, not background */
+  }
+
+  /* right column: Our Story */
+  .story-content {
+    flex: 1 1 45%;
+    max-width: 520px;
+    margin: 0;
+    margin-left: var(--story-shift); /* move story further to the right */
+  }
+
+  /* paragraphs adapt to two-column layout */
+  .about-text p,
+  .story-text p {
+    max-width: 100%;
+    font-size: 22px;
+  }
+
+  /* adjust headings a bit on desktop */
+  .about-title,
+  .story-title {
+    font-size: 48px;
+    margin-top: 8%;
+  }
+
+  .about-sub,
+  .story-sub {
+    font-size: 25px;
+  }
+
+  /* align story-actions left in column layout if desired:
+     keep it centered by default; if you want left alignment, uncomment:
+  .story-actions { justify-content: flex-start; } */
+}
+
+/* ------------------ Mobile overrides ------------------ */
+@media (max-width: 700px) {
+  .about-section {
+    padding: 48px 6%;
+    background-image: url('https://uploads.onecompiler.io/444asmhmf/444wjafn2/website%20page%20CREAM%20MOBILE.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+  }
+
+  .about-title,
+  .story-title { font-size: 28px; }
+  .about-sub,
+  .story-sub { font-size: 20px; }
+  .about-text p,
+  .story-text p { font-size: 16px; }
+  .story-actions { justify-content: center; }
+  .about-inner.single.about-wrapper { max-width: 900px; }
+}
+
+/* ------------------ Utility: reduce repetition and protect overrides ------------------ */
+/* If you need to temporarily force the two-column layout for debugging, add:
+   .about-inner.single.about-wrapper { display:flex !important; }
+   But avoid !important in production unless necessary.
+*/
+
+/* ---------- Force two-column layout on desktop (strong override) ---------- */
+@media (min-width: 768px) {
+  /* make sure the wrapper element that has all three classes becomes flex */
+  .about-inner.about-wrapper.single {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;      /* prevent stacking */
+    gap: 40px !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* ensure children don't collapse to full width */
+  .about-inner.about-wrapper.single > .about-content,
+  .about-inner.about-wrapper.single > .story-content {
+    flex: 0 0 50% !important;          /* two equal columns; change if you want different widths */
+    max-width: 50% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    text-align: center !important;     /* keep text centered as you requested */
+  }
+
+  /* If you prefer About narrower and Story wider, use these instead:
+  .about-inner.about-wrapper.single > .about-content { flex: 0 0 55% !important; max-width:55% !important; }
+  .about-inner.about-wrapper.single > .story-content { flex: 0 0 45% !important; max-width:45% !important; }
+  */
+
+  /* Keep your nudges but make sure they're applied after forcing flex */
+  .about-content { margin-left: var(--about-shift, -4%) !important; }
+  .story-content { margin-left: var(--story-shift, 8%) !important; }
+
+  /* Defensive: prevent any rule from making children display:block */
+  .about-inner.about-wrapper.single > .about-content,
+  .about-inner.about-wrapper.single > .story-content {
+    display: block !important; /* block inside flex is normal; keeps vertical content flow but column layout stays */
+  }
+}
+
+
+
+
+  /* CARD SECTION               */
+
+
+  
+  /* Section wrapper */
+  .products-section {
+    padding: 48px 4%;
+    height: 100vh;
+    background-image: url("https://uploads.onecompiler.io/444asmhmf/444wdvrzf/website%20page%20GREEN.jpg");
+    background-repeat: no-repeat;
+    background-position: center top;   /* adjust to shift image up/down */
+    background-size: 100% auto; 
+    position: relative;
+    padding-bottom: 80px; /* space for arrows */
+    
+  }
+  
+  /* Title */
+  .section-title {
+    text-align: center;
+    font-size: 48px;
+    color: var(--bg);
+    margin: 0 0 18px;
+    margin-bottom: 7%;
+    margin-top: 7%;
+    font-weight: 800;
+  }
+  /* Responsive */
+@media (max-width: 700px) {
+  .products-section {
+    background-image: url('https://uploads.onecompiler.io/444asmhmf/4454gcx5b/website%20page%20GREEN%20MOBILE-1.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+  }
+  .section-title {
+    font-size: 28px;
+  }
+}
+  /* Cards wrapper */
+  .cards-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Scroll container */
+  .cards-scroll {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    padding: 12px 48px; /* FIXED white-line issue */
+    align-items: center;
+    box-sizing: border-box; /* FIXED */
+  }
+  
+  /* Hide scrollbar */
+  .cards-scroll::-webkit-scrollbar { display: none; }
+  .cards-scroll { scrollbar-width: none; }
+  
+  /* ----------------------------
+     PRODUCT CARD
+  ---------------------------- */
+  .product-card.wide.compact {
+    flex: 0 0 calc(33.33% - 24px); /* 3 cards per row */
+    min-width: 300px;             /* keeps card nicely small */
+    height: 300px;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+    box-shadow: 0 10px 32px rgba(33, 90, 63, 0.12);
+    scroll-snap-align: center;
+    transition: transform .22s ease, box-shadow .22s ease;
+    border: none;
+  }
+  
+  
+  
+  .product-card.wide.compact:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 42px rgba(33, 90, 63, 0.16);
+  }
+  
+  /* IMAGE FULL IN CARD */
+  .product-full-img {
+    width: 101%;
+    height: 100%;
+    object-fit: cover;  /* image fully fills card */
+    object-position: center;
+    display: block;
+  }
+  
+  /* Overlay shading (optional) */
+  .product-card.wide.compact::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.25) 0%,
+      rgba(0,0,0,0.05) 40%,
+      rgba(0,0,0,0) 80%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* ----------------------------
+     BUY NOW BUTTON ON IMAGE
+  ---------------------------- */
+  .btn.buy-now-transparent {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+  
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.95);
+  
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.4px;
+  
+    backdrop-filter: blur(3px);
+    transition: 0.18s ease;
+    z-index: 3;
+  }
+  
+  .btn.buy-now-transparent:hover,
+  .btn.buy-now-transparent:focus {
+    background: rgba(255,255,255,0.22);
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+  }
+  
+  /* Coming soon badge */
+  .coming-soon {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    background: rgba(0,0,0,0.45);
+    padding: 8px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.85);
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    z-index: 3;
+  }
+  
+  /* ----------------------------
+     LEFT / RIGHT ARROWS
+  ---------------------------- */
+  .cards-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  
+    width: 46px;
+    height: 46px;
+  
+    border-radius: 999px;
+    background: rgba(255,255,255,0.98);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 22px;
+    color: var(--accent);
+    cursor: pointer;
+    z-index: 20;
+  
+    transition: transform .12s ease, opacity .12s ease;
+  }
+  
+  .cards-arrow.left { left: 8px; }
+  .cards-arrow.right { right: 8px; }
+  
+  .cards-arrow:hover {
+    transform: translateY(-50%) scale(1.06);
+  }
+  
+  .cards-arrow[disabled] {
+    opacity: 0.45;
+    cursor: default;
+    transform: translateY(-50%) scale(0.98);
+  }
+  
+  /* Hide arrows on swipe devices */
+  @media (max-width: 900px) {
+    .cards-arrow { display: none; }
+    .cards-scroll { padding: 12px 20px; }
+  }
+  
+  /* Adjust side padding */
+  @media (max-width: 1200px) {
+    .cards-scroll { padding: 12px 44px; }
+  }
+  
+  /* ----------------------------
+     RESPONSIVE — CARDS PER VIEW
+  ---------------------------- */
+  @media (max-width: 1100px) {
+    .product-card.wide.compact {
+      flex: 0 0 45%;
+      min-width: 360px;
+      height: 280px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .cards-scroll {
+      gap: 16px;
+      padding: 10px 4%;
+    }
+  
+    .product-card.wide.compact {
+      flex: 0 0 92%;
+      min-width: 88%;
+      height: 220px;
+      border-radius: 12px;
+    }
+  
+    .btn.buy-now-transparent,
+    .coming-soon {
+      bottom: 12px;
+      padding: 7px 20px;
+      font-size: 15px;
+    }
+  }
+  
 /* ---------- Footer ---------- */
 /* ---------- Minimal Footer ---------- */
 .site-footer {
-  background: var(--bg); /* same color as rest */
+  background-image: url('https://uploads.onecompiler.io/444asmhmf/444wdvrzf/website%20page%20GREEN.jpg');
   padding: 28px 6% 22px;
-  color: #444;
+  color: var(--bg);
   text-align: center;
   font-size: 14px;
   border-top: none;
   box-shadow: none;
+}
+@media (max-width: 700px) {
+  .site-footer {
+    background-image: url('https://uploads.onecompiler.io/444asmhmf/4454gcx5b/website%20page%20GREEN%20MOBILE-1.jpg');
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 .footer-inner {
@@ -718,12 +1162,12 @@ body {
 .footer-address,
 .footer-contact {
   margin: 4px 0;
-  color: #555;
+  color: var(--bg);
   font-weight: 500;
 }
 
 .footer-contact a {
-  color: var(--accent, #215a3f);
+  color: var(--bg, #215a3f);
   font-weight: 700;
   text-decoration: none;
 }
@@ -742,7 +1186,7 @@ body {
 .footer-icon {
   width: 26px;
   height: 26px;
-  filter: brightness(0) saturate(100%) invert(15%) sepia(10%) saturate(650%) hue-rotate(90deg) brightness(95%) contrast(90%);
+  filter: brightness(0) invert(1);
   opacity: 0.9;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
