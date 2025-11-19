@@ -167,7 +167,8 @@ export default function App() {
       <section className="hero-section">
         <div className="overlay">
           <div className="hero-content">
-            <h1>Pure Idukki Spices-From Our Soil</h1>
+            <h1>Pure Idukki Spices</h1>
+            <h1>From Our Soil</h1>
             <h1>to Your Spice Rack.</h1>
             <p>
               Estate-grown, hand-harvested spices-pure, fresh, and free from additives
